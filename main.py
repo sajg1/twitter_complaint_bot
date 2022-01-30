@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 import os
+import time
 
 
 
@@ -29,10 +31,15 @@ class InternetSpeedBot:
         self.driver.maximize_window()
         consent_button = self.driver.find_element(By.ID, '_evidon-banner-acceptbutton')
         consent_button.click()
+        time.sleep(2)
+        notification = self.driver.find_element(By.CLASS_NAME, 'notification-dismiss')
+        notification.click()
+        time.sleep(2)
         go_button = self.driver.find_element(By.CLASS_NAME, 'start-text')
-        # go_button.click()
-        # self.up = float(self.driver.find_element(By.CLASS_NAME, 'upload.speed'))
-        # self.down = float(self.driver.find_element(By.CLASS_NAME, 'download-speed'))
+        go_button.click()
+        time.sleep(50)
+        self.up = float(self.driver.find_element(By.CLASS_NAME, 'upload-speed').text)
+        self.down = float(self.driver.find_element(By.CLASS_NAME, 'download-speed').text)
 
 
 speed_test = InternetSpeedBot(CHROME_DRIVER_PATH)
