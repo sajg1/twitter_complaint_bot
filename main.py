@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 import os
 import time
 
@@ -11,6 +12,7 @@ PROMISED_UP = 10
 CHROME_DRIVER_PATH = '/Users/admin/Development/chromedriver'
 TWITTER_EMAIL = os.environ.get('TWITTER_EMAIL')
 TWITTER_PASSWORD = os.environ.get('TWITTER_PASSWORD')
+TWITTER_USERNAME = '@interne00336103'
 SPEED_TEST_URL = 'https://www.speedtest.net/'
 TWITTER_URL = 'https://twitter.com/i/flow/login?input_flow_data=%7B%22requested_variant%' \
               '22%3A%22eyJsYW5nIjoiZW4ifQ%3D%3D%22%7D'
@@ -51,7 +53,7 @@ class InternetSpeedBot:
     def tweet_at_provider(self, url, provider):
         self.driver.get(url)
         self.driver.maximize_window()
-        time.sleep(10)
+        time.sleep(5)
 
         # ENTER EMAIL ADDRESS AND NEXT
         email_input = self.driver.find_element(By.NAME, 'text')
@@ -59,6 +61,16 @@ class InternetSpeedBot:
         next_button = self.driver.find_element(By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/'
                                                          'div/div/div[2]/div[2]/div[1]/div/div[6]')
         next_button.click()
+        # POSSIBLE 'UNUSUAL LOGIN ACTIVITY' PAGE
+        try:
+            time.sleep(3)
+            username_input = self.driver.find_element(By.NAME, 'text')
+            username_input.send_keys(TWITTER_USERNAME)
+            next_button_2 = self.driver.find_element(By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]'
+                                                               '/div/div/div[2]/div[2]/div[2]/div/div')
+            next_button_2.click()
+        except NoSuchElementException:
+            print("No unusual activiy page")
         # ENTER PASSWORD AND LOGIN
         time.sleep(5)
         password_input = self.driver.find_element(By.NAME, 'password')
@@ -67,7 +79,11 @@ class InternetSpeedBot:
                                                           'div/div/div[2]/div[2]/div[2]/div/div/div')
         login_button.click()
 
-        
+        tweet = f"Hey {provider}, why is my internet speed {self.down}down/{self.up}up when I pay for {PROMISED_DOWN}" \
+                f"down/{PROMISED_UP}up?"
+        time.sleep(5)
+        whats_happening_input = self.driver.find_element(By.CLASS_NAME, 'public-DraftStyleDefault-block')
+        whats_happening_input.send_keys(tweet)
 
 
 
