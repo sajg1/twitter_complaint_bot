@@ -12,6 +12,9 @@ CHROME_DRIVER_PATH = '/Users/admin/Development/chromedriver'
 TWITTER_EMAIL = os.environ.get('TWITTER_EMAIL')
 TWITTER_PASSWORD = os.environ.get('TWITTER_PASSWORD')
 SPEED_TEST_URL = 'https://www.speedtest.net/'
+TWITTER_URL = 'https://twitter.com/i/flow/login?input_flow_data=%7B%22requested_variant%' \
+              '22%3A%22eyJsYW5nIjoiZW4ifQ%3D%3D%22%7D'
+PROVIDER = "my provider"
 
 
 class InternetSpeedBot:
@@ -41,10 +44,23 @@ class InternetSpeedBot:
         self.up = float(self.driver.find_element(By.CLASS_NAME, 'upload-speed').text)
         self.down = float(self.driver.find_element(By.CLASS_NAME, 'download-speed').text)
 
+    def tweet_at_provider(self, url, provider):
+        self.driver.get(url)
+        self.driver.maximize_window()
+        time.sleep(10)
+        email_input = self.driver.find_element(By.NAME, 'text')
+        email_input.send_keys(TWITTER_EMAIL)
+        next_button = self.driver.find_element(By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/'
+                                                         'div/div/div[2]/div[2]/div[1]/div/div[6]')
+        next_button.click()
 
+
+
+#
 speed_test = InternetSpeedBot(CHROME_DRIVER_PATH)
-print("Down before: ", speed_test.get_download_speed())
-print("Up before: ", speed_test.get_upload_speed())
-speed_test.get_internet_speed(SPEED_TEST_URL)
-print("Down after: ", speed_test.get_download_speed())
-print("Up after: ", speed_test.get_upload_speed())
+# print("Down before: ", speed_test.get_download_speed())
+# print("Up before: ", speed_test.get_upload_speed())
+# speed_test.get_internet_speed(SPEED_TEST_URL)
+# print("Down after: ", speed_test.get_download_speed())
+# print("Up after: ", speed_test.get_upload_speed())
+speed_test.tweet_at_provider(TWITTER_URL, PROVIDER)
