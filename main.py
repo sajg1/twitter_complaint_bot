@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 import os
 import time
@@ -68,8 +67,8 @@ class InternetSpeedBot:
                 time.sleep(3)
                 username_input = self.driver.find_element(By.NAME, 'text')
                 username_input.send_keys(TWITTER_USERNAME)
-                next_button_2 = self.driver.find_element(By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]'
-                                                                   '/div/div/div[2]/div[2]/div[2]/div/div')
+                next_button_2 = self.driver.find_element(By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/'
+                                                                   'div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div')
                 next_button_2.click()
             except NoSuchElementException:
                 print("No unusual activiy page")
@@ -81,25 +80,18 @@ class InternetSpeedBot:
                                                               'div/div/div[2]/div[2]/div[2]/div/div/div')
             login_button.click()
 
-            tweet = f"Hey {provider}, why is my internet speed {self.down}down/{self.up}up when I pay for {PROMISED_DOWN}" \
-                    f"down/{PROMISED_UP}up?"
+            tweet = f"Hey {provider}, why is my internet speed {self.down}down/{self.up}up when I pay for" \
+                    f" {PROMISED_DOWN} down/{PROMISED_UP}up?"
             time.sleep(5)
 
             # WRITE AND SEND TWEET
             whats_happening_input = self.driver.find_element(By.CLASS_NAME, 'public-DraftStyleDefault-block')
             whats_happening_input.send_keys(tweet)
-            send_tweet = self.driver.find_element(By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div'
-                                                            '/div[2]/div/div[2]/div[1]/div/div/div/div[2]/div[3]/div/div/div[2]/div[3]')
+            send_tweet = self.driver.find_element(By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div'
+                                                            '/div/div[2]/div/div[2]/div[1]/div/div/div/div[2]/div[3]'
+                                                            '/div/div/div[2]/div[3]')
             send_tweet.click()
 
 
-
-
-#
 speed_test = InternetSpeedBot(CHROME_DRIVER_PATH)
-# print("Down before: ", speed_test.get_download_speed())
-# print("Up before: ", speed_test.get_upload_speed())
-# speed_test.get_internet_speed()
-# print("Down after: ", speed_test.get_download_speed())
-# print("Up after: ", speed_test.get_upload_speed())
 speed_test.tweet_at_provider(TWITTER_URL, PROVIDER, PROMISED_UP, PROMISED_DOWN)
