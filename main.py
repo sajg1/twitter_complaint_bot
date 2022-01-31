@@ -22,6 +22,7 @@ class InternetSpeedBot:
         self.driver = webdriver.Chrome(executable_path=driver_path)
         self.up = 0
         self.down = 0
+        self.speed_test_url = 'https://www.speedtest.net/'
 
     def get_upload_speed(self):
         return self.up
@@ -29,18 +30,21 @@ class InternetSpeedBot:
     def get_download_speed(self):
         return self.down
 
-    def get_internet_speed(self, url):
-        self.driver.get(url)
+    def get_internet_speed(self):
+        self.driver.get(self.speed_test_url)
         self.driver.maximize_window()
         consent_button = self.driver.find_element(By.ID, '_evidon-banner-acceptbutton')
         consent_button.click()
         time.sleep(2)
+        # DISMISS NOTIFICATION
         notification = self.driver.find_element(By.CLASS_NAME, 'notification-dismiss')
         notification.click()
         time.sleep(2)
+        # COMMENCE SPEED TEST
         go_button = self.driver.find_element(By.CLASS_NAME, 'start-text')
         go_button.click()
         time.sleep(50)
+        # UPDATE UP AND DOWN FIGURES
         self.up = float(self.driver.find_element(By.CLASS_NAME, 'upload-speed').text)
         self.down = float(self.driver.find_element(By.CLASS_NAME, 'download-speed').text)
 
@@ -48,11 +52,23 @@ class InternetSpeedBot:
         self.driver.get(url)
         self.driver.maximize_window()
         time.sleep(10)
+
+        # ENTER EMAIL ADDRESS AND NEXT
         email_input = self.driver.find_element(By.NAME, 'text')
         email_input.send_keys(TWITTER_EMAIL)
         next_button = self.driver.find_element(By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/'
                                                          'div/div/div[2]/div[2]/div[1]/div/div[6]')
         next_button.click()
+        # ENTER PASSWORD AND LOGIN
+        time.sleep(5)
+        password_input = self.driver.find_element(By.NAME, 'password')
+        password_input.send_keys(TWITTER_PASSWORD)
+        login_button = self.driver.find_element(By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/'
+                                                          'div/div/div[2]/div[2]/div[2]/div/div/div')
+        login_button.click()
+
+        
+
 
 
 
